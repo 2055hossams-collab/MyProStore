@@ -1,0 +1,103 @@
+<style>
+    /* 1. إخفاء الشريط افتراضياً على الشاشات الكبيرة */
+    .mobile-nav-bar {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        /* 2. إظهار الشريط على شاشات الجوال */
+        .mobile-nav-bar {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 60px; /* ارتفاع مناسب */
+            background-color: #ffffff;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1030; /* أعلى من شريط التنقل العلوي */
+            justify-content: space-around;
+            align-items: center;
+            padding: 0;
+        }
+
+        .mobile-nav-bar a {
+            flex-grow: 1;
+            text-align: center;
+            color: #495057; /* لون رمادي داكن للنص */
+            text-decoration: none;
+            padding: 10px 0;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+
+        .mobile-nav-bar a:hover,
+        .mobile-nav-bar a.active {
+            color: #007bff; /* لون أساسي نشط */
+        }
+
+        .mobile-nav-bar i {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        
+        /* 3. تعديل الهامش السفلي للمحتوى لمنع التداخل */
+        body {
+            padding-bottom: 60px; 
+        }
+
+        /* 4. تصميم زر السلة المميز */
+        .mobile-nav-bar .cart-btn {
+            position: relative;
+        }
+
+        .mobile-nav-bar .cart-btn .badge {
+            position: absolute;
+            top: 5px;
+            right: 15%;
+            transform: translate(50%, -50%);
+            font-size: 0.7rem;
+            padding: 4px 6px;
+        }
+    }
+</style>
+
+
+<div class="mobile-nav-bar">
+    <a href="/" class="<%= (typeof pageName !== 'undefined' && pageName === 'index') ? 'active' : '' %>">
+        <i class="fas fa-home"></i>
+        <span>الرئيسية</span>
+    </a>
+    
+    <a href="/cart" class="cart-btn <%= (typeof pageName !== 'undefined' && pageName === 'cart') ? 'active' : '' %>">
+        <i class="fas fa-shopping-cart"></i>
+        <span>السلة</span>
+        <span class="badge bg-danger rounded-pill" id="mobile-cart-count">
+            <%= cart.length %>
+        </span>
+    </a>
+    
+    <a href="/profile/favorites" class="<%= (typeof pageName !== 'undefined' && pageName === 'favorites') ? 'active' : '' %>">
+        <i class="fas fa-heart"></i>
+        <span>المفضلة</span>
+        <% if (user) { %>
+            <span class="badge bg-danger rounded-pill" style="font-size: 0.7rem; position: absolute; top: 5px; right: 15%; transform: translate(50%, -50%);">
+                <%= favorites.length %>
+            </span>
+        <% } %>
+    </a>
+    
+    <% if (user) { %>
+        <a href="/profile" class="<%= (typeof pageName !== 'undefined' && pageName === 'profile') ? 'active' : '' %>">
+            <i class="fas fa-user-circle"></i>
+            <span>حسابي</span>
+        </a>
+    <% } else { %>
+        <a href="/login" class="<%= (typeof pageName !== 'undefined' && pageName === 'login') ? 'active' : '' %>">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>دخول</span>
+        </a>
+    <% } %>
+</div>

@@ -1,0 +1,24 @@
+<%# views/index.ejs %>
+<%- include('partials/header', {title: title, pageName: pageName}) %>
+
+<div class="container my-5">
+    <h2>مرحباً بك في متجرك!</h2>
+    <div class="row">
+        <% if (products) { %>
+            <% products.forEach(product => { %>
+                <div class="col-md-3 mb-4">
+                    <div class="card shadow-sm">
+                        <img src="<%= product.img %>" class="card-img-top" alt="<%= product.name %>">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= product.name %></h5>
+                            <p class="card-text"><%= product.price %> ريال</p>
+                            <a href="/product/<%= product._id %>" class="btn btn-primary">عرض التفاصيل</a>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        <% } %>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

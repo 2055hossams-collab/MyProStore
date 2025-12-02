@@ -1,0 +1,51 @@
+<%- include('../partials/header', {title: title, pageName: pageName}) %>
+
+<div class="container my-5">
+    <h1 class="text-center mb-5 display-4 text-primary">مرحباً بك في لوحة تحكم المشرف</h1>
+    
+    <div class="row text-center">
+        
+        <!-- بطاقة إدارة المنتجات -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg h-100 bg-light">
+                <div class="card-body">
+                    <i class="fas fa-boxes fa-4x text-info mb-3"></i>
+                    <h5 class="card-title">إدارة المنتجات</h5>
+                    <p class="card-text text-muted">إضافة، تعديل، وحذف منتجات المتجر.</p>
+                    <a href="/admin/products" class="btn btn-info mt-2">عرض المنتجات</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- بطاقة إدارة الطلبات -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg h-100 bg-light">
+                <div class="card-body">
+                    <i class="fas fa-truck fa-4x text-success mb-3"></i>
+                    <h5 class="card-title">إدارة الطلبات</h5>
+                    <p class="card-text text-muted">تتبع وتحديث حالة طلبات العملاء.</p>
+                    <a href="/admin/orders" class="btn btn-success mt-2 disabled">عرض الطلبات</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- بطاقة المستخدمين -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg h-100 bg-light">
+                <div class="card-body">
+                    <i class="fas fa-users-cog fa-4x text-warning mb-3"></i>
+                    <h5 class="card-title">إدارة المستخدمين</h5>
+                    <p class="card-text text-muted">إدارة حسابات العملاء والصلاحيات.</p>
+                    <a href="/admin/users" class="btn btn-warning mt-2 disabled">عرض المستخدمين</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="mt-5 text-center">
+        <a href="/" class="btn btn-secondary"><i class="fas fa-home me-2"></i> العودة للمتجر</a>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

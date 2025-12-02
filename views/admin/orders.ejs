@@ -1,0 +1,64 @@
+<%- include('../partials/header', {title: title, pageName: 'admin_orders'}) %>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-3">
+            <%- include('admin-sidebar') %>
+        </div>
+        
+        <div class="col-md-9">
+            <h2 class="mb-4"><i class="fas fa-receipt me-2"></i> إدارة الطلبات</h2>
+            
+            <% if (orders.length > 0) { %>
+                <div class="card shadow-sm p-0">
+                    <table class="table table-hover mb-0 text-center align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>#ID</th>
+                                <th>العميل</th>
+                                <th>التاريخ</th>
+                                <th>الإجمالي</th>
+                                <th>الحالة</th>
+                                <th>تحديث الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orders.forEach(order => { %>
+                                <tr>
+                                    <td><%= order.orderId %></td>
+                                    <td><%= order.user %></td>
+                                    <td><%= new Date(order.date).toLocaleDateString('ar-EG') %></td>
+                                    <td class="fw-bold text-primary"><%= order.total.toFixed(2) %> ر.س</td>
+                                    <td>
+                                        <% let statusClass = 'badge bg-secondary';
+                                           if (order.status === 'قيد الانتظار') statusClass = 'badge bg-warning text-dark';
+                                           else if (order.status === 'قيد التجهيز') statusClass = 'badge bg-info';
+                                           else if (order.status === 'تم الشحن') statusClass = 'badge bg-success';
+                                           else if (order.status === 'ملغي') statusClass = 'badge bg-danger';
+                                        %>
+                                        <span class="<%= statusClass %>"><%= order.status %></span>
+                                    </td>
+                                    <td>
+                                        <form action="/admin/orders/status/<%= order._id %>" method="POST" class="d-flex">
+                                            <select class="form-select form-select-sm me-2" name="status" required>
+                                                <option value="قيد الانتظار" <%= order.status === 'قيد الانتظار' ? 'selected' : '' %>>قيد الانتظار</option>
+                                                <option value="قيد التجهيز" <%= order.status === 'قيد التجهيز' ? 'selected' : '' %>>قيد التجهيز</option>
+                                                <option value="تم الشحن" <%= order.status === 'تم الشحن' ? 'selected' : '' %>>تم الشحن</option>
+                                                <option value="ملغي" <%= order.status === 'ملغي' ? 'selected' : '' %>>ملغي</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-primary" title="تحديث"><i class="fas fa-sync-alt"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info text-center mt-3">لا توجد طلبات بعد.</div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,124 @@
+<%- include('../partials/header', {title: title, pageName: pageName}) %>
+
+<div class="container py-5">
+    <h1 class="mb-5 text-center fw-bold text-primary">عربة التسوق</h1>
+
+    <% if (errorMessage) { %>
+        <div class="alert alert-danger text-center" role="alert">
+            <%= errorMessage %>
+        </div>
+    <% } %>
+    
+    <% if (cartItems && cartItems.length > 0) { %>
+        <div class="row">
+            <!-- قائمة المنتجات -->
+            <div class="col-lg-8">
+                <% cartItems.forEach(item => { %>
+                    <% if (item.productId) { %>
+                        <div class="card mb-4 shadow-sm border-0 product-card-2026">
+                            <div class="row g-0 align-items-center">
+                                <div class="col-md-3">
+                                    <img src="<%= item.productId.imageUrl || 'https://placehold.co/150x150/CCCCCC/000000?text=No+Image' %>" 
+                                         class="img-fluid rounded-start-4 p-3" 
+                                         alt="<%= item.productId.title %>"
+                                         style="height: 150px; object-fit: cover; width: 100%;">
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold"><%= item.productId.title %></h5>
+                                        <p class="card-text text-muted small">
+                                            <%= item.productId.description 
+                                                ? item.productId.description.substring(0, 50) + '...' 
+                                                : 'لا يوجد وصف متاح.' 
+                                            %>
+                                        </p>
+                                        <p class="card-text">
+                                            <span class="fw-bold text-success fs-5"><%= item.productId.price.toFixed(2) %> ر.س</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 text-center p-3">
+                                    <!-- 🚨 أدوات التحكم بالكمية -->
+                                    <div class="d-flex justify-content-center align-items-center mb-3">
+                                        <!-- زر إنقاص الكمية -->
+                                        <form action="/cart/update-quantity" method="POST" class="d-inline">
+                                            <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                            <input type="hidden" name="action" value="decrease">
+                                            <!-- زر معطل إذا كانت الكمية 1، سيتحول إلى إزالة -->
+                                            <button type="submit" class="btn btn-outline-secondary btn-sm rounded-circle me-2" 
+                                                    style="width: 30px; height: 30px; line-height: 15px;">
+                                                <% if (item.quantity > 1) { %>
+                                                    <i class="fas fa-minus"></i>
+                                                <% } else { %>
+                                                    <i class="fas fa-trash-alt"></i>
+                                                <% } %>
+                                            </button>
+                                        </form>
+                                        
+                                        <span class="fs-5 fw-bold mx-2" style="min-width: 30px;"><%= item.quantity %></span>
+                                        
+                                        <!-- زر زيادة الكمية -->
+                                        <form action="/cart/update-quantity" method="POST" class="d-inline">
+                                            <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                            <input type="hidden" name="action" value="increase">
+                                            <button type="submit" class="btn btn-primary btn-sm rounded-circle ms-2"
+                                                    style="width: 30px; height: 30px; line-height: 15px;">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <p class="fs-5 fw-bold text-danger">الإجمالي: <%= (item.productId.price * item.quantity).toFixed(2) %> ر.س</p>
+                                    
+                                    <!-- زر الإزالة الصريح -->
+                                    <form action="/cart/update-quantity" method="POST" class="d-block mt-2">
+                                        <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                                        <input type="hidden" name="action" value="remove">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary text-muted w-75">
+                                            <i class="fas fa-trash-alt me-1"></i> إزالة من العربة
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                <% }) %>
+            </div>
+
+            <!-- ملخص الطلب -->
+            <div class="col-lg-4">
+                <div class="card shadow-lg bg-white p-4 rounded-3 sticky-top border-0" style="top: 80px;">
+                    <h4 class="card-title fw-bold mb-4 border-bottom pb-2 text-dark">ملخص الطلب</h4>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>المجموع الفرعي (<%= cartItems.length %> منتج):</span>
+                        <span class="fw-bold"><%= totalPrice %> ر.س</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2 border-bottom pb-3">
+                        <span>تكلفة الشحن:</span>
+                        <span class="text-success fw-bold">مجاني</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-3 fw-bold fs-5">
+                        <span>الإجمالي النهائي:</span>
+                        <span class="text-primary"><%= totalPrice %> ر.س</span>
+                    </div>
+
+                    <button class="btn btn-primary btn-lg mt-4 fw-bold shadow-sm rounded-pill">
+                        <i class="fas fa-credit-card me-2"></i> متابعة لإتمام الشراء
+                    </button>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="alert alert-info text-center py-5 shadow-lg border-0 rounded-4" role="alert">
+            <i class="fas fa-shopping-cart fa-4x mb-4 text-primary"></i>
+            <h4 class="alert-heading fw-bold">عربة التسوق فارغة حالياً.</h4>
+            <p class="mb-4">ابدأ بإضافة بعض المنتجات الرائعة التي تناسبك.</p>
+            <a href="/products" class="btn btn-primary btn-lg mt-3 fw-bold rounded-pill">اكتشف منتجاتنا</a>
+        </div>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>

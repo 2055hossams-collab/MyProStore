@@ -1,0 +1,53 @@
+<%- include('../partials/header', {title: title, pageName: 'admin_users'}) %>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-3">
+            <%- include('admin-sidebar') %>
+        </div>
+        
+        <div class="col-md-9">
+            <h2 class="mb-4"><i class="fas fa-users me-2"></i> إدارة المستخدمين</h2>
+            
+            <% if (users.length > 0) { %>
+                <div class="card shadow-sm p-0">
+                    <table class="table table-hover mb-0 text-center align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>#ID</th>
+                                <th>اسم المستخدم</th>
+                                <th>الدور الحالي</th>
+                                <th>تغيير الدور</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% users.forEach(u => { %>
+                                <tr>
+                                    <td><%= u._id.toString().substring(0, 4) %>...</td>
+                                    <td class="fw-bold"><%= u.username %></td>
+                                    <td>
+                                        <% let roleClass = u.role === 'admin' ? 'badge bg-danger' : 'badge bg-success'; %>
+                                        <span class="<%= roleClass %>"><%= u.role %></span>
+                                    </td>
+                                    <td>
+                                        <form action="/admin/users/role/<%= u._id %>" method="POST" class="d-flex">
+                                            <select class="form-select form-select-sm me-2" name="role" required <%= u.username === user.username ? 'disabled' : '' %> >
+                                                <option value="user" <%= u.role === 'user' ? 'selected' : '' %>>مستخدم عادي</option>
+                                                <option value="admin" <%= u.role === 'admin' ? 'selected' : '' %>>مشرف</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-primary" title="تحديث" <%= u.username === user.username ? 'disabled' : '' %>><i class="fas fa-sync-alt"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info text-center mt-3">لا يوجد مستخدمون بعد.</div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

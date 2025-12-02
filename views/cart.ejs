@@ -1,0 +1,84 @@
+<%# =================================== %>
+<%# views/cart.ejs %>
+<%# =================================== %>
+<%- include('partials/header', {title: title, pageName: pageName}) %>
+
+<div class="container my-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-shopping-cart me-2"></i> عربة التسوق</h2>
+    
+    <% if (cart.length > 0) { %>
+        <div class="row">
+            <div class="col-lg-8">
+                <table class="table table-bordered table-hover bg-white shadow-sm">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>المنتج</th>
+                            <th class="text-center">السعر</th>
+                            <th class="text-center">الكمية</th>
+                            <th class="text-center">الإجمالي</th>
+                            <th class="text-center">حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% cart.forEach(item => { %>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="<%= item.img || '/img/default-product.png' %>" alt="<%= item.name %>" style="width: 50px; height: 50px; object-fit: cover; margin-left: 10px;">
+                                        <a href="/product/<%= item._id %>"><%= item.name %></a>
+                                    </div>
+                                </td>
+                                <td class="text-center fw-bold"><%= item.price %> ريال</td>
+                                <td class="text-center">
+                                    <form action="/cart/update/<%= item._id %>" method="POST" class="d-inline-flex">
+                                        <input type="number" name="quantity" value="<%= item.quantity %>" min="1" class="form-control form-control-sm text-center" style="width: 70px;" onchange="this.form.submit()">
+                                    </form>
+                                </td>
+                                <td class="text-center fw-bold text-success"><%= item.total.toFixed(2) %> ريال</td>
+                                <td class="text-center">
+                                    <form action="/cart/remove/<%= item._id %>" method="POST">
+                                        <button type="submit" class="btn btn-danger btn-sm" title="حذف">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        ملخص الطلب
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="fw-bold">الإجمالي الفرعي:</span>
+                            <span><%= totalPrice.toFixed(2) %> ريال</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-4 border-top pt-3">
+                            <span class="fw-bold fs-5">الإجمالي الكلي:</span>
+                            <span class="fw-bold fs-5 text-success"><%= totalPrice.toFixed(2) %> ريال</span>
+                        </div>
+                        
+                        <a href="/checkout" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-credit-card me-2"></i> اتمام عملية الشراء
+                        </a>
+                        <a href="/" class="btn btn-secondary btn-sm w-100 mt-2">متابعة التسوق</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="alert alert-info text-center shadow-sm">
+            <h4 class="alert-heading">عربة التسوق فارغة!</h4>
+            <p>أضف بعض المنتجات الرائعة لبدء عملية الشراء.</p>
+            <hr>
+            <a href="/" class="btn btn-primary">اكتشف المنتجات الآن</a>
+        </div>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

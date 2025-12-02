@@ -1,0 +1,72 @@
+<!-- شريط التنقل ثابت وداكن - Fixed Dark Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
+    <div class="container-fluid container-xl">
+        <!-- شعار المتجر -->
+        <a class="navbar-brand fw-bold text-uppercase" href="/">
+            <i class="fas fa-store me-2 text-primary"></i>
+            MyProStore 
+            <span class="badge bg-primary fs-6 fw-light">2026</span>
+        </a>
+        
+        <!-- زر القائمة للأجهزة الصغيرة -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- الروابط الأساسية -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link <%= pageName === 'home' ? 'active' : '' %>" href="/">الرئيسية</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= pageName === 'product-list' ? 'active' : '' %>" href="/products">المتجر</a>
+                </li>
+
+                <!-- رابط لوحة التحكم للمسؤول فقط -->
+                <% if (isLoggedIn && isAdmin) { %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle <%= pageName.startsWith('admin') ? 'active' : '' %>" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-tachometer-alt me-1"></i> لوحة التحكم
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" href="/admin/products">إدارة المنتجات</a></li>
+                            <li><a class="dropdown-item" href="/admin/add-product">إضافة منتج</a></li>
+                            <!-- يمكن إضافة المزيد من الروابط هنا لاحقًا -->
+                        </ul>
+                    </li>
+                <% } %>
+            </ul>
+            
+            <!-- أيقونات وإجراءات المستخدم -->
+            <div class="d-flex align-items-center">
+                <!-- أيقونة العربة -->
+                <a href="/cart" class="btn btn-outline-primary position-relative me-3">
+                    <i class="fas fa-shopping-cart"></i> العربة
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <%= cartCount %>
+                        <span class="visually-hidden">عناصر في العربة</span>
+                    </span>
+                </a>
+
+                <!-- أيقونات المفضلة (يمكنك تفعيل هذا لاحقًا) -->
+                <!-- <a href="/favorites" class="btn btn-outline-light me-3" title="المفضلة"><i class="far fa-heart"></i></a> -->
+                
+                <% if (isLoggedIn) { %>
+                    <!-- رابط تسجيل الخروج -->
+                    <a href="/logout" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i> خروج
+                    </a>
+                <% } else { %>
+                    <!-- رابط تسجيل الدخول والتسجيل -->
+                    <a href="/login" class="btn btn-outline-success me-2">
+                        <i class="fas fa-sign-in-alt me-1"></i> دخول
+                    </a>
+                    <a href="/signup" class="btn btn-primary">
+                        <i class="fas fa-user-plus me-1"></i> تسجيل
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</nav>

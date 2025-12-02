@@ -1,0 +1,123 @@
+<%- include('partials/header', {title: 'إتمام عملية الدفع'}) %>
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">💳 إتمام عملية الدفع</h2>
+    <hr>
+    
+    <% if (!cart || cart.length === 0) { %>
+        <div class="alert alert-warning text-center">
+            لا توجد عناصر في العربة للمتابعة إلى الدفع. <a href="/">العودة للمتجر</a>
+        </div>
+        <%- include('partials/footer') %>
+        <% return %>
+    <% } %>
+
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm p-4">
+                <h4 class="mb-4 text-primary"><i class="fas fa-truck me-2"></i> معلومات الشحن</h4>
+                <form action="/checkout" method="POST">
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="fullName" class="form-label">الاسم بالكامل</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<%= user ? user.username : '' %>" required readonly>
+                        </div>
+                        <div class="col-12">
+                            <label for="address" class="form-label">العنوان التفصيلي</label>
+                            <input type="text" class="form-control" id="address" name="address" placeholder="الشارع، رقم المنزل، تفاصيل إضافية" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="city" class="form-label">المدينة</label>
+                            <input type="text" class="form-control" id="city" name="city" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="country" class="form-label">الدولة</label>
+                            <input type="text" class="form-control" id="country" name="country" value="السعودية" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="zip" class="form-label">الرمز البريدي</label>
+                            <input type="text" class="form-control" id="zip" name="zip" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">رقم الهاتف</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required placeholder="مثال: 05XXXXXXXX">
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <h4 class="mb-3 text-primary"><i class="fas fa-wallet me-2"></i> طريقة الدفع (افتراضي)</h4>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="cashOnDelivery" value="Cash On Delivery" checked>
+                        <label class="form-check-label" for="cashOnDelivery">
+                            الدفع عند الاستلام (COD)
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-lg w-100 mt-5">
+                        إتمام الطلب والدفع 
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white fw-bold"><i class="fas fa-file-invoice me-2"></i> ملخص الفاتورة</div>
+                <div class="card-body">
+                    <% 
+                        let subtotal = 0;
+                        let discount = 0;
+                        cart.forEach(item => subtotal += item.price * item.qty);
+
+                        if (coupon) {
+                            if (coupon.type === 'fixed') {
+                                discount = coupon.value;
+                            } else if (coupon.type === 'percentage') {
+                                discount = subtotal * (coupon.value / 100);
+                            }
+                            discount = Math.min(discount, subtotal); 
+                        }
+                        const finalTotal = subtotal - discount;
+                    %>
+                    
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item d-flex justify-content-between small text-muted">
+                            <span>الإجمالي الفرعي (<%= cart.length %> أصناف):</span>
+                            <span><%= subtotal.toFixed(2) %> ر.س</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between small text-success">
+                            <span>الخصم (<%= coupon ? coupon.code : 'لا يوجد' %>):</span>
+                            <span>- <%= discount.toFixed(2) %> ر.س</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between small">
+                            <span>تكلفة الشحن (افتراضي):</span>
+                            <span>مجاني</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between fw-bold fs-5 bg-light">
+                            <span>الإجمالي النهائي:</span>
+                            <span class="text-danger"><%= finalTotal.toFixed(2) %> ر.س</span>
+                        </li>
+                    </ul>
+                    
+                    <h6 class="mt-4 mb-2">المنتجات في العربة:</h6>
+                    <ul class="list-group list-group-flush">
+                        <% cart.forEach(item => { %>
+                            <li class="list-group-item d-flex justify-content-between p-1 small">
+                                <span class="text-truncate"><%= item.name %></span>
+                                <span>x <%= item.qty %></span>
+                            </li>
+                        <% }) %>
+                    </ul>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

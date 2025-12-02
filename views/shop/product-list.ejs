@@ -1,0 +1,44 @@
+<%- include('../partials/header', {title: title, pageName: pageName}) %>
+
+<div class="container">
+    <h1 class="text-center my-5 fw-bold text-primary">تصفح جميع المنتجات</h1>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        <% if (products.length > 0) { %>
+            <% products.forEach(product => { %>
+                <div class="col">
+                    <div class="card h-100 shadow">
+                        <img src="<%= product.imageUrl || 'https://placehold.co/400x300/CCCCCC/000000?text=No+Image' %>" class="card-img-top" alt="<%= product.title %>" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate"><%= product.title %></h5>
+                            <p class="card-text text-success fw-bold fs-5"><%= product.price.toFixed(2) %> ر.س</p>
+                            <!-- 🚨 التصحيح هنا: التحقق من وجود الوصف قبل استخدام substring -->
+                            <p class="card-text text-muted">
+                                <%= product.description 
+                                    ? product.description.substring(0, 100) + '...' 
+                                    : 'لا يوجد وصف متاح.' 
+                                %>
+                            </p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center bg-light">
+                            <form action="/add-to-cart" method="POST" class="d-inline">
+                                <input type="hidden" name="productId" value="<%= product._id %>">
+                                <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-cart-plus me-1"></i> أضف للعربة</button>
+                            </form>
+                            <form action="/add-to-favorites" method="POST" class="d-inline">
+                                <input type="hidden" name="productId" value="<%= product._id %>">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="أضف للمفضلة"><i class="far fa-heart"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="col-12 text-center py-5">
+                <div class="alert alert-info">لا توجد منتجات في المتجر حاليًا.</div>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

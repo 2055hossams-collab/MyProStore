@@ -1,0 +1,58 @@
+<%- include('partials/header') %>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group shadow-sm">
+            <div class="list-group-item list-group-item-dark fw-bold text-center">
+                <i class="fas fa-user-circle fa-2x mb-2"></i>
+                <h5 class="mb-0"><%= user.username %></h5>
+                <small class="text-muted"><%= user.role === 'admin' ? 'مشرف' : 'عضو' %></small>
+            </div>
+            
+            <a href="/profile" class="list-group-item list-group-item-action active">
+                <i class="fas fa-tachometer-alt me-2"></i> لوحة التحكم
+            </a>
+            <a href="/profile/orders" class="list-group-item list-group-item-action">
+                <i class="fas fa-box me-2"></i> طلباتي
+            </a>
+            <a href="/profile/favorites" class="list-group-item list-group-item-action">
+                <i class="fas fa-heart me-2"></i> المفضلة
+            </a>
+            <a href="/logout" class="list-group-item list-group-item-action text-danger">
+                <i class="fas fa-sign-out-alt me-2"></i> تسجيل الخروج
+            </a>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="card shadow-lg p-4">
+            <h2>مرحباً بك، <%= user.username %>!</h2>
+            <hr>
+            <p class="lead">هنا يمكنك إدارة حسابك ومشاهدة ملخص لآخر أنشطتك في المتجر.</p>
+            
+            <div class="row mt-4">
+                <div class="col-sm-6 mb-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">طلباتي</h5>
+                            <p class="card-text">تتبع حالة طلباتك الحالية وتاريخ طلباتك السابقة.</p>
+                            <a href="/profile/orders" class="btn btn-light btn-sm">عرض الطلبات <i class="fas fa-arrow-circle-left"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <div class="card text-white bg-danger">
+                        <div class="card-body">
+                            <h5 class="card-title">المفضلة</h5>
+                            <p class="card-text">راجع المنتجات التي قمت بحفظها لوقت لاحق.</p>
+                            <a href="/profile/favorites" class="btn btn-light btn-sm">عرض المفضلة <i class="fas fa-arrow-circle-left"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,68 @@
+<%- include('../partials/header', {title: title, pageName: 'admin_products'}) %>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-3">
+            <%- include('admin-sidebar') %>
+        </div>
+        
+        <div class="col-md-9">
+            <h2 class="mb-4"><%= product ? 'تعديل المنتج: ' + product.name : 'إضافة منتج جديد' %></h2>
+            
+            <div class="card shadow p-4">
+                <form action="/admin/products/save" method="POST">
+                    <% if (product) { %>
+                        <input type="hidden" name="id" value="<%= product._id %>">
+                    <% } %>
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="name" class="form-label fw-bold">اسم المنتج</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<%= product ? product.name : '' %>" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="category" class="form-label fw-bold">التصنيف</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="" disabled <%= !product ? 'selected' : '' %>>اختر تصنيف...</option>
+                                <option value="electronics" <%= product && product.category === 'electronics' ? 'selected' : '' %>>إلكترونيات</option>
+                                <option value="clothes" <%= product && product.category === 'clothes' ? 'selected' : '' %>>ملابس</option>
+                                <option value="books" <%= product && product.category === 'books' ? 'selected' : '' %>>كتب</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="price" class="form-label fw-bold">السعر (ر.س)</label>
+                            <input type="number" step="0.01" class="form-control" id="price" name="price" value="<%= product ? product.price : '' %>" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="stock" class="form-label fw-bold">المخزون المتوفر</label>
+                            <input type="number" class="form-control" id="stock" name="stock" value="<%= product ? product.stock : 0 %>" required>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="img" class="form-label fw-bold">رابط صورة المنتج (URL)</label>
+                            <input type="url" class="form-control" id="img" name="img" value="<%= product ? product.img : '' %>" placeholder="http://example.com/image.jpg">
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="short_desc" class="form-label fw-bold">وصف قصير</label>
+                            <textarea class="form-control" id="short_desc" name="short_desc" rows="2" required><%= product ? product.short_desc : '' %></textarea>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="long_desc" class="form-label fw-bold">الوصف الكامل</label>
+                            <textarea class="form-control" id="long_desc" name="long_desc" rows="5" required><%= product ? product.long_desc : '' %></textarea>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-save me-1"></i> حفظ المنتج</button>
+                            <a href="/admin/products" class="btn btn-secondary btn-lg me-2">إلغاء</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

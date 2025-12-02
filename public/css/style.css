@@ -1,0 +1,82 @@
+/*
+ * MyProStore Custom Styles - Design 2026
+ * المسار: public/css/style.css
+ */
+
+/* ====================================
+   1. الإعدادات الأساسية
+   ==================================== */
+
+:root {
+    --primary-color: #007bff; /* أزرق أساسي */
+    --secondary-color: #6c757d; /* رمادي ثانوي */
+    --link-color: #0056b3;
+    --card-bg: #ffffff;
+}
+
+/* ====================================
+   2. الأزرار والعناصر التفاعلية
+   ==================================== */
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+/* ====================================
+   3. بطاقات المنتجات (Product Cards)
+   ==================================== */
+
+.product-card-2026 {
+    border-radius: 1rem; /* زوايا مدورة أكبر */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    background-color: var(--card-bg);
+}
+
+.product-card-2026:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15) !important; /* ظل أكبر عند التحويم */
+}
+
+.product-card-2026 .card-img-top {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+/* ====================================
+   4. قسم البطل (Hero Section)
+   ==================================== */
+
+.hero-section {
+    padding: 6rem 0;
+    border-radius: 1.5rem;
+}
+
+/* ====================================
+   5. التذييل (Footer)
+   ==================================== */
+
+footer {
+    background-color: var(--dark-bg);
+    color: #f8f9fa;
+    padding: 3rem 0;
+    margin-top: 5rem;
+}
+
+footer a {
+    color: #adb5bd;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+footer a:hover {
+    color: var(--primary-color);
+}

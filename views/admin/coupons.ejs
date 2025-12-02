@@ -1,0 +1,94 @@
+<%- include('../partials/header', {title: title, pageName: 'admin_coupons'}) %>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-3">
+            <%- include('admin-sidebar') %>
+        </div>
+        
+        <div class="col-md-9">
+            <h2 class="mb-4"><i class="fas fa-tags me-2"></i> إدارة الكوبونات</h2>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <i class="fas fa-plus me-1"></i> إضافة/تعديل كوبون
+                </div>
+                <div class="card-body">
+                    <form action="/admin/coupons/save" method="POST" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="code" class="form-label">كود الكوبون</label>
+                            <input type="text" class="form-control" id="code" name="code" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="value" class="form-label">قيمة الخصم</label>
+                            <input type="number" step="0.01" class="form-control" id="value" name="value" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="type" class="form-label">نوع الخصم</label>
+                            <select class="form-select" id="type" name="type" required>
+                                <option value="fixed">مبلغ ثابت</option>
+                                <option value="percentage">نسبة مئوية (%)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="minOrder" class="form-label">الحد الأدنى للطلب</label>
+                            <input type="number" step="0.01" class="form-control" id="minOrder" name="minOrder" value="0">
+                        </div>
+                        <div class="col-12 d-flex align-items-end">
+                             <div class="form-check me-4">
+                                <input class="form-check-input" type="checkbox" id="isActive" name="isActive" checked>
+                                <label class="form-check-label" for="isActive">
+                                    نشط
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i> حفظ الكوبون</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <% if (coupons.length > 0) { %>
+                <h3 class="mt-5">قائمة الكوبونات</h3>
+                <div class="card shadow-sm p-0">
+                    <table class="table table-hover mb-0 text-center align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>الكود</th>
+                                <th>القيمة</th>
+                                <th>النوع</th>
+                                <th>الحد الأدنى</th>
+                                <th>الحالة</th>
+                                <th>العمليات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% coupons.forEach(c => { %>
+                                <tr>
+                                    <td class="fw-bold"><%= c.code %></td>
+                                    <td>
+                                        <%= c.value.toFixed(2) %> 
+                                        <%= c.type === 'percentage' ? '%' : 'ر.س' %>
+                                    </td>
+                                    <td><%= c.type === 'percentage' ? 'نسبة' : 'ثابت' %></td>
+                                    <td><%= c.minOrder.toFixed(2) %> ر.س</td>
+                                    <td>
+                                        <span class="badge <%= c.isActive ? 'bg-success' : 'bg-danger' %>"><%= c.isActive ? 'نشط' : 'غير نشط' %></span>
+                                    </td>
+                                    <td>
+                                        <form action="/admin/coupons/delete/<%= c._id %>" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف الكوبون <%= c.code %>؟')">
+                                            <button type="submit" class="btn btn-sm btn-danger" title="حذف"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info text-center mt-3">لا توجد كوبونات خصم حاليًا.</div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

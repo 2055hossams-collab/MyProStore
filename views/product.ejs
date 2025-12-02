@@ -1,0 +1,139 @@
+<%- include('partials/header', {title: product.name}) %>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <img src="<%= product.img || '/img/default-product.png' %>" class="img-fluid rounded shadow-sm" alt="<%= product.name %>">
+        </div>
+        
+        <div class="col-lg-6">
+            <h1 class="fw-bold"><%= product.name %></h1>
+            <span class="badge bg-secondary mb-3"><%= product.category %></span>
+            
+            <div class="d-flex align-items-center mb-3">
+                <span class="text-warning fs-4 me-2">
+                    <% for(let i = 1; i <= 5; i++) { %>
+                        <i class="fas fa-star <%= i <= Math.round(product.rating_avg) ? 'text-warning' : 'text-muted' %>"></i>
+                    <% } %>
+                </span>
+                <span class="text-muted">(<%= product.review_count %> مراجعات)</span>
+            </div>
+            
+            <h2 class="text-primary fw-bold mb-4"><%= product.price.toFixed(2) %> ر.س</h2>
+            
+            <p class="lead"><%= product.short_desc %></p>
+            
+            <% if (product.stock > 0) { %>
+                <p class="text-success fw-bold"><i class="fas fa-check-circle me-1"></i> متوفر في المخزون: <%= product.stock %> وحدة</p>
+            <% } else { %>
+                <p class="text-danger fw-bold"><i class="fas fa-ban me-1"></i> نفذ المخزون</p>
+            <% } %>
+
+            <form action="/cart/add/<%= product._id %>" method="POST" class="d-flex align-items-center mb-4">
+                <input type="number" name="quantity" class="form-control text-center me-3" value="1" min="1" max="<%= product.stock %>" style="width: 100px;" <%= product.stock === 0 ? 'disabled' : '' %>>
+                <button type="submit" class="btn btn-success btn-lg" <%= product.stock === 0 ? 'disabled' : '' %>>
+                    <i class="fas fa-cart-plus me-1"></i> أضف إلى العربة
+                </button>
+                
+                <% if (user) { %>
+                    <form action="/favorite/toggle/<%= product._id %>" method="POST" class="d-inline">
+                        <% const isFav = favorites.some(favId => favId.toString() === product._id.toString()); %>
+                        <button type="submit" class="btn btn-lg <%= isFav ? 'btn-danger' : 'btn-outline-danger' %> ms-2" title="<%= isFav ? 'إزالة من المفضلة' : 'أضف إلى المفضلة' %>">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </form>
+                <% } %>
+            </form>
+
+            <h4 class="mt-5">الوصف الكامل</h4>
+            <p><%= product.long_desc %></p>
+        </div>
+    </div>
+    
+    <hr class="my-5">
+
+    <div class="row">
+        <div class="col-12">
+            <h2>مراجعات العملاء (<%= product.review_count %>)</h2>
+            
+            <% if (user) { 
+                const existingReview = product.reviews.find(r => r.user === user.username);
+            %>
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <%= existingReview ? 'تعديل مراجعتك' : 'أضف مراجعتك' %>
+                    </div>
+                    <div class="card-body">
+                        <form action="/review/<%= product._id %>" method="POST">
+                            <div class="mb-3">
+                                <label for="rating" class="form-label">التقييم (1-5)</label>
+                                <select class="form-select" id="rating" name="rating" required>
+                                    <option value="5" <%= existingReview && existingReview.rating === 5 ? 'selected' : '' %>>5 نجوم (ممتاز)</option>
+                                    <option value="4" <%= existingReview && existingReview.rating === 4 ? 'selected' : '' %>>4 نجوم (جيد جداً)</option>
+                                    <option value="3" <%= existingReview && existingReview.rating === 3 ? 'selected' : '' %>>3 نجوم (جيد)</option>
+                                    <option value="2" <%= existingReview && existingReview.rating === 2 ? 'selected' : '' %>>2 نجوم (مقبول)</option>
+                                    <option value="1" <%= existingReview && existingReview.rating === 1 ? 'selected' : '' %>>1 نجوم (سيئ)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="comment" class="form-label">التعليق</label>
+                                <textarea class="form-control" id="comment" name="comment" rows="3" required><%= existingReview ? existingReview.comment : '' %></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary"><%= existingReview ? 'تعديل' : 'إرسال' %> المراجعة</button>
+                        </form>
+                    </div>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info text-center">
+                    يرجى <a href="/login" class="alert-link">تسجيل الدخول</a> لكتابة مراجعة.
+                </div>
+            <% } %>
+
+            <% if (product.reviews.length > 0) { %>
+                <ul class="list-group mt-4">
+                    <% product.reviews.sort((a, b) => b.date - a.date).forEach(review => { %>
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-1 fw-bold"><i class="fas fa-user me-1"></i> <%= review.user %></h6>
+                                <small class="text-muted"><%= new Date(review.date).toLocaleDateString('ar-EG') %></small>
+                            </div>
+                            <p class="mb-1">
+                                <% for(let i = 1; i <= 5; i++) { %>
+                                    <i class="fas fa-star <%= i <= review.rating ? 'text-warning' : 'text-muted' %>"></i>
+                                <% } %>
+                            </p>
+                            <p class="mb-0"><%= review.comment %></p>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p class="text-muted">كن أول من يراجع هذا المنتج!</p>
+            <% } %>
+        </div>
+    </div>
+
+    <hr class="my-5">
+    
+    <% if (similar.length > 0) { %>
+        <h2>منتجات قد تعجبك</h2>
+        <div class="row row-cols-1 row-cols-md-4 g-4 mt-3">
+            <% similar.forEach(p => { %>
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <a href="/product/<%= p._id %>">
+                            <img src="<%= p.img || '/img/default-product.png' %>" class="card-img-top" alt="<%= p.name %>" style="height: 150px; object-fit: cover;">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate"><%= p.name %></h5>
+                            <p class="fw-bold text-primary"><%= p.price.toFixed(2) %> ر.س</p>
+                            <a href="/product/<%= p._id %>" class="btn btn-sm btn-outline-primary w-100">عرض التفاصيل</a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+
+</div>
+
+<%- include('partials/footer') %>

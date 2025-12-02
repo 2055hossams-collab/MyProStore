@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+<h2 class="my-4">👤 تاريخ طلباتي</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <% if (userOrders.length === 0) { %>
+            <div class="alert alert-info text-center">لم تقم بإجراء أي طلبات حتى الآن. <a href="/">ابدأ التسوق</a></div>
+        <% } else { %>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th># الطلب</th>
+                            <th>التاريخ</th>
+                            <th>الإجمالي</th>
+                            <th>الحالة</th>
+                            <th>المنتجات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% userOrders.forEach(order => { %>
+                        <tr>
+                            <td>#<%= order._id.toString().slice(-5) %></td>
+                            <td><%= order.date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) %></td>
+                            <td><%= order.total.toFixed(2) %> ريال</td>
+                            <td>
+                                <span class="badge bg-<%= 
+                                    order.status === 'جديد' ? 'warning' : 
+                                    order.status === 'تم الشحن' ? 'primary' : 
+                                    order.status === 'مكتمل' ? 'success' : 'secondary'
+                                %>">
+                                    <%= order.status %>
+                                </span>
+                            </td>
+                            <td>
+                                <ul class="list-unstyled mb-0 small">
+                                    <% order.items.forEach(item => { %>
+                                        <li><%= item.name %> (×<%= item.qty %>)</li>
+                                    <% }) %>
+                                </ul>
+                            </td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

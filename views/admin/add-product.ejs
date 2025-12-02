@@ -1,0 +1,44 @@
+<%- include('../partials/header', {title: title, pageName: 'add-product'}) %>
+
+<div class="container py-5">
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 600px;">
+        <h2 class="card-title text-center mb-4 fw-bold text-primary">إضافة منتج جديد</h2>
+
+        <!-- رسالة خطأ مؤقتة (إذا تم تعيينها في POST) -->
+        <% if (errorMessage) { %>
+            <div class="alert alert-danger text-center" role="alert">
+                <%= errorMessage %>
+            </div>
+        <% } %>
+
+        <form action="/admin/add-product" method="POST">
+            
+            <div class="mb-3">
+                <label for="title" class="form-label"><i class="fas fa-box me-2"></i> عنوان المنتج</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="price" class="form-label"><i class="fas fa-money-bill-alt me-2"></i> السعر (ر.س)</label>
+                <!-- استخدام step="0.01" للسماح بإدخال كسور عشرية -->
+                <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="imageUrl" class="form-label"><i class="fas fa-image me-2"></i> رابط الصورة (URL)</label>
+                <input type="url" class="form-control" id="imageUrl" name="imageUrl" placeholder="مثال: https://..." required>
+            </div>
+            
+            <div class="mb-4">
+                <label for="description" class="form-label"><i class="fas fa-align-right me-2"></i> الوصف</label>
+                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-success w-100 mt-3 py-2 fw-bold">
+                <i class="fas fa-plus-circle me-2"></i> إضافة المنتج
+            </button>
+        </form>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>
